@@ -1,0 +1,37 @@
+Job Search Strategy Guide for Early-Career Business Analysts
+
+EVALUATING A JOB POSTING
+- Look beyond the title. Read the actual responsibilities to see if the role involves real analysis or is mostly data entry and reporting.
+- Check for growth indicators. Phrases like career development, mentorship program, promotion from within, or rotational program are green flags.
+- Research salary competitiveness using Glassdoor, LinkedIn Salary, or Levels.fyi before applying.
+- Watch for red flags: vague job descriptions, no mention of team structure, high turnover signals on Glassdoor, or roles that list ten or more responsibilities for one person.
+
+EVALUATING AN OFFER
+- Total compensation matters more than base salary. Factor in benefits, 401k match, bonus potential, and PTO.
+- Ask about the onboarding and ramp-up process. A company that cannot answer this clearly may not invest in developing junior talent.
+- Ask what success looks like in the first 90 days. This tells you whether the role is well-defined.
+- Negotiate. Entry-level offers often have 5 to 10 percent flexibility. Always negotiate respectfully and with a specific number.
+
+HOW TO THINK ABOUT EARLY CAREER DECISIONS
+- Your first role sets the trajectory for your resume. Prioritize roles where you will develop real transferable skills like SQL, data analysis, business communication, and project management.
+- Brand name matters early. A recognizable company on your resume opens doors for your second job search.
+- The people you work with matter as much as the company. A great manager can accelerate your growth faster than a prestigious title.
+- Do not optimize purely for salary in your first role. Five thousand dollars more at a company where you stagnate is worse than five thousand less at one where you grow fast and get promoted.
+
+MANAGING YOUR PIPELINE
+- Apply in batches of 10 to 15 at a time so follow-up is manageable.
+- Track every application with a consistent status: Applied, Interviewing, Offer, or Rejected.
+- Follow up after 5 to 7 business days if you have not heard back. A short, professional note to the recruiter is appropriate.
+- Treat every interview as practice, even for roles you are not sure about.
+
+WHAT BUSINESS ANALYST INTERVIEWERS LOOK FOR
+- Structured thinking: can you break down a vague problem into clear steps?
+- SQL proficiency: many BA interviews include a SQL test. Practice on LeetCode or StrataScratch.
+- Communication: can you explain a technical finding to a non-technical stakeholder clearly?
+- Business acumen: do you understand how the company makes money and where analysts add value?
+- Curiosity: do you ask thoughtful questions about the role, the team, and the business?
+
+NETWORKING TIPS
+- Connect with KU alumni in target cities on LinkedIn. A warm introduction is worth ten cold applications.
+- Attend local analytics or fintech meetups in Chicago or Kansas City.
+- Message recruiters directly after applying. Keep it short: one sentence on why you are interested, one on your relevant background, and a ask for a quick call.

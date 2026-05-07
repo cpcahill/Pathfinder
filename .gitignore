@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Secrets and environment
+.env
+
+# Virtual environment
+.venv/
+venv/
+
+# Streamlit secrets (NEVER commit this file)
+.streamlit/secrets.toml
+
+# PyCharm / IDE
+.idea/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local SQLite database (will be re-created at runtime)
+tools_files/*.db

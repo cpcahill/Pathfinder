@@ -1,0 +1,61 @@
+Colin Cahill, Personal Job Search Preferences
+
+Target Roles (open to all of these as a recent grad):
+- Business Analyst (top preference)
+- Data Analyst
+- Systems Analyst
+- Business Intelligence Analyst
+- Strategy Analyst
+- Operations Analyst
+- Financial Analyst / Finance Associate / Fintech Analyst
+- AI Engineer, ML Engineer, or Machine Learning Analyst
+- Data Scientist (entry-level / new-grad)
+- Junior Software Developer / Junior Software Engineer / Associate Developer
+- Automation Analyst
+- Reporting Analyst / Product Analyst
+- Entry-level analytical consulting and technology consulting roles
+
+Preferred Industries:
+- Fintech and financial services
+- Management consulting and strategy
+- Technology and SaaS
+- Healthcare analytics
+- Supply chain and operations
+
+Location Preferences:
+- Chicago, IL (top preference: large market, strong fintech and consulting scene)
+- Kansas City, MO/KS (close to home, growing tech and finance sector)
+- Remote or hybrid (open to fully remote roles anywhere in the US)
+- Minneapolis, MN (open to it given CyberPower internship connection)
+
+What I Am Looking For in a Company:
+- Strong mentorship and structured onboarding for early-career hires
+- Data-driven culture where analysts have real influence on decisions
+- Clear growth path from analyst to senior analyst or manager
+- Collaborative team environment, not siloed or bureaucratic
+- Company size: mid-size to large preferred (200 or more employees), but open to well-funded startups
+
+Salary Expectations:
+- Entry-level target range: $55,000 to $75,000
+- Would prioritize growth and mentorship over salary at the margins
+
+What Makes a Job a Strong Fit:
+- Uses SQL, Python, or Excel regularly in day-to-day work
+- Involves working with data to solve real business problems
+- Has a clear analytical, technical, or strategic component, not just reporting
+- Company has a track record of promoting from within
+- Role involves collaboration across multiple teams or departments
+- Bonus points for AI, automation, or modern data stack work
+
+What Would Make Me Pass on a Role:
+- Purely administrative with no analytical or technical work
+- No defined growth path or mentorship culture
+- Fully in-office with zero flexibility
+- Very small company with no structure or support for junior employees
+
+What I Bring That Sets Me Apart:
+- Hands-on experience building AI agents at CyberPower Systems
+- Real business analyst experience from Cloud3 Lab internship
+- Technical skills across SQL, Python, and Excel
+- Six Sigma White Belt certification showing process improvement mindset
+- Strong communicator and peer mentor, not just a technical person
