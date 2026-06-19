@@ -1,6 +1,6 @@
 # Pathfinder
 
-Pathfinder is a personal AI job-search and application assistant built for Colin Cahill, a graduating senior at the University of Kansas studying Business Analytics. It searches live job listings, logs and tracks applications, surfaces pipeline metrics, and gives personalized fit analysis grounded in Colin's resume and preferences.
+Pathfinder is a personal AI job-search and application assistant built for Colin Cahill, a graduating senior at the University of Kansas studying Business Analytics. It searches live job listings, logs and tracks applications, surfaces pipeline metrics, and gives personalized fit analysis grounded in a resume and stated preferences.
 
 Built for BSAN 400 (Detelina Stoyanova) using LangChain, OpenAI, FAISS, and Streamlit.
 
@@ -12,7 +12,7 @@ Built for BSAN 400 (Detelina Stoyanova) using LangChain, OpenAI, FAISS, and Stre
 - Update the status of existing applications (Applied, Interviewing, Offer, Rejected)
 - Show the full application pipeline as a table
 - Compute pipeline statistics (interview rate, offer rate, applications this week)
-- Personalize every response using a FAISS vector store built from Colin's resume, job preferences, and a job-search strategy guide
+- Personalize every response using a FAISS vector store built from a resume, job preferences, and a job-search strategy guide
 
 ## Project structure
 
@@ -26,11 +26,15 @@ Pathfinder/
 ├── .gitignore                # Files Git should ignore
 ├── README.md                 # This file
 ├── rag_docs/                 # Documents fed to the RAG vector store
-│   ├── Resume.pdf
+│   ├── Resume.pdf            # Redacted sample resume (no real contact details)
 │   ├── job_preferences.txt
 │   └── job_search_guide.txt
-└── tools_files/              # SQLite database lives here at runtime
+└── tools_files/              # SQLite database lives here at runtime (gitignored)
 ```
+
+> Note: the resume in `rag_docs/` is a redacted sample with contact details removed.
+> The application database in `tools_files/` is created automatically on first run
+> and is intentionally not tracked in Git.
 
 ## Running it locally
 
@@ -75,7 +79,3 @@ The app will open in your browser at `http://localhost:8501`.
 - FAISS (vector store)
 - Adzuna Jobs API (live job listings)
 - SQLite (application tracker)
-# Pathfinder
-# Pathfinder
-# Pathfinder
-# Pathfinder

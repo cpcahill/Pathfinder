@@ -23,10 +23,45 @@ Preferred Industries:
 - Supply chain and operations
 
 Location Preferences:
-- Chicago, IL (top preference: large market, strong fintech and consulting scene)
+I am open to a wide range of cities across the United States. I do not want
+to limit my search to one or two metros. The right role in a great city matters
+more than the city itself, so treat location as a strong preference, not a hard
+filter. When evaluating a city, weigh it on the criteria below.
+
+Top preferences (search these first):
+- Chicago, IL (large market, strong fintech and consulting scene)
 - Kansas City, MO/KS (close to home, growing tech and finance sector)
-- Remote or hybrid (open to fully remote roles anywhere in the US)
-- Minneapolis, MN (open to it given CyberPower internship connection)
+- Lawrence / Kansas City metro and the broader state of Kansas
+
+Strongly open to (great cities I would happily relocate to):
+- Texas: Austin, Dallas, Houston, San Antonio, Fort Worth
+- California: San Diego, Los Angeles, San Francisco / Bay Area
+- Arizona: Phoenix, Scottsdale, Tempe, Tucson
+- Seattle, WA
+- Denver, CO and Boulder, CO
+- Nashville, TN
+- Raleigh-Durham and Charlotte, NC
+- Tampa, Orlando, and Miami, FL
+- Columbus, OH
+- Other comparable mid-to-large US metros with a healthy analyst job market
+
+What makes a city appealing to me (use these as the "fit" test):
+- Good weather and a generally pleasant climate
+- Plenty to do: outdoor activities, food, music, sports, nightlife, things to explore
+- A genuinely nice place to live, attractive surroundings or scenery
+- Affordability relative to the salary offered: a lower salary in an affordable
+  city can beat a higher salary in an expensive one. Weigh cost of living against
+  pay rather than chasing the biggest number.
+- A real job market for analysts, so there is room to grow and switch roles later
+
+Work arrangement:
+- Remote or hybrid roles are welcome anywhere in the US.
+- A great fully remote role can outrank an in-person role in a less ideal city.
+
+Salary Expectations:
+- Entry-level target range: $60,000 to $100,000
+- Would prioritize growth and mentorship over salary at the margins
+- Factor salary against the city's cost of living when judging an offer's value
 
 What I Am Looking For in a Company:
 - Strong mentorship and structured onboarding for early-career hires
@@ -34,10 +69,6 @@ What I Am Looking For in a Company:
 - Clear growth path from analyst to senior analyst or manager
 - Collaborative team environment, not siloed or bureaucratic
 - Company size: mid-size to large preferred (200 or more employees), but open to well-funded startups
-
-Salary Expectations:
-- Entry-level target range: $55,000 to $75,000
-- Would prioritize growth and mentorship over salary at the margins
 
 What Makes a Job a Strong Fit:
 - Uses SQL, Python, or Excel regularly in day-to-day work

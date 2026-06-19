@@ -1,25 +1,27 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-
-# Secrets and environment
+# ---- Secrets ----
 .env
-
-# Virtual environment
-.venv/
-venv/
-
-# Streamlit secrets (NEVER commit this file)
+.env.*
 .streamlit/secrets.toml
 
-# PyCharm / IDE
-.idea/
-.vscode/
+# ---- Sensitive data (never commit) ----
+# Real application history lives here at runtime and is recreated automatically.
+tools_files/
+*.db
 
-# OS junk
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ---- FAISS / vector store artifacts (rebuilt at startup) ----
+*.faiss
+faiss_index/
+
+# ---- OS / editor noise ----
 .DS_Store
 Thumbs.db
-
-# Local SQLite database (will be re-created at runtime)
-tools_files/*.db
+.vscode/
+.idea/

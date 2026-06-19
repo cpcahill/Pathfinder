@@ -86,7 +86,7 @@ def load_documents():
 
 
 # ─────────────────────────────────────────────────────────────────
-# BUILD THE VECTOR STORE
+# BUILD THE VECTOR STORE (FAISS vector db)
 # ─────────────────────────────────────────────────────────────────
 
 def build_vectorstore():
