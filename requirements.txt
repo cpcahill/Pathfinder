@@ -4,7 +4,7 @@ langchain-openai
 langchain-community
 langchain-text-splitters
 faiss-cpu
-pandas
 python-dotenv
+pyyaml
 pypdf
 requests

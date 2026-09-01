@@ -1,0 +1,17 @@
+# Pathfinder is designed dark-first. Pinning the base theme here means the
+# app no longer has to fight Streamlit's light chrome with !important rules,
+# which is what the previous stylesheet spent most of its lines doing.
+
+[theme]
+base                = "dark"
+primaryColor        = "#8B5CF6"
+backgroundColor     = "#08090B"
+secondaryBackgroundColor = "#101216"
+textColor           = "#E8EAED"
+font                = "sans serif"
+
+[client]
+toolbarMode = "minimal"
+
+[server]
+runOnSave = true

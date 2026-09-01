@@ -1,0 +1,73 @@
+Colin Cahill
+Lenexa, Kansas | linkedin.com/in/cahillcolin | github.com/cpcahill
+(Contact details deliberately omitted: this file is committed to a public repository.)
+
+PROFESSIONAL PROFILE
+Business Analytics graduate who builds practical AI tools and teaches the people around him
+to run them. Earned a promotion into CyberPower's first AI Specialist Intern role by pitching
+automation projects leadership chose to fund. Drawn to teams building AI that augments people
+rather than replacing them, where accuracy is audited and decisions carry real cost.
+
+TECHNICAL SKILLS
+AI Development: Python, LangChain, Claude, OpenAI API, prompt engineering, RAG, agent design,
+  model evaluation, FAISS
+Software & Platforms: Streamlit, SQLite, GitHub, Microsoft Copilot Studio, Dynamics 365,
+  Advanced Excel
+Data & Analytics: SQL, Pandas, NumPy, process mapping, data validation, forecasting,
+  ER modeling, predictive analytics, workflow automation
+
+EDUCATION
+University of Kansas, Lawrence, Kansas
+Bachelor of Science in Business Analytics, May 2026
+Certifications: Six Sigma White Belt, Claude 101, AI Fluency: Framework & Foundations
+
+PROFESSIONAL EXPERIENCE
+
+Handshake AI, Remote
+AI Fellow (Contract), July 2026 to Present
+- Evaluate large language model output against task requirements, identifying reasoning errors
+  and responses that read fluently while being factually or logically incorrect.
+- Write structured feedback used to improve model behavior, building a working sense of where
+  AI systems fail in ways automated metrics do not catch.
+
+CyberPower Systems (USA), Inc., Shakopee, Minnesota
+AI Specialist Intern, May 2025 to August 2025
+- Proposed multiple AI automation ideas to leadership, then independently scoped, built, and
+  deployed the one selected as highest impact: an AI-assisted invoice-auditing tool for
+  distributor rebate claims, projected to save a key operations employee approximately 4 hours
+  per week, or 200+ hours annually.
+- Translated a manual rebate-review process into structured validation logic covering invoice
+  data, pricing files, rebate rules, and U.S. and Canadian claim formats; built the tool to read
+  Excel and scanned PDF claims and check each claim against accumulated history, targeting
+  duplicates where manual review had caught over $50,000 in false reimbursements over a few months.
+- Completed assigned audits ahead of schedule, then ran discovery across departments and joined
+  weekly sales and operations meetings as the department's first intern, mapping how work moved
+  and identifying realistic AI use cases.
+- Handed the tool off to the Channel Sales Operations team and lead technical consultant, walking
+  through how it worked, how to run it, and how to adapt it, so it would keep working after the
+  internship ended.
+
+Cloud3 Lab, Los Angeles, California
+Business Analyst Intern, July 2021 to July 2022
+- Researched Web3 market trends and built an Excel-based competitor database used for product
+  positioning.
+
+PROJECTS
+
+Pathfinder: AI Job-Search Assistant
+https://projectpathfinder.streamlit.app/ | https://github.com/cpcahill/Pathfinder
+Python, LangChain, FAISS, OpenAI, Streamlit, SQLite
+- Built and publicly deployed an autonomous LangChain app that searches live job postings through
+  an API, tracks applications in SQLite, and gives personalized fit analysis using RAG over a
+  FAISS vector store.
+- Designed five custom agent tools (job search, application logging, status updates, pipeline
+  view, and metrics) and shipped the app on Streamlit Cloud.
+
+LEADERSHIP & COMMUNITY
+
+Alpha Kappa Lambda Fraternity, Lawrence, Kansas
+Peer Tutor & Community Leader, August 2024 to May 2026
+- Helped grow the chapter from one of the smaller fraternities on campus into one of the larger
+  ones, roughly doubling membership through recruitment, mentorship, and a stronger chapter culture.
+- Tutored 20 junior members in SQL, Excel, and data analytics, and mentored younger members through
+  academic, career, and personal decisions.

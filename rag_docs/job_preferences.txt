@@ -1,7 +1,7 @@
 Colin Cahill, Personal Job Search Preferences
 
 Target Roles (open to all of these as a recent grad):
-- Business Analyst (top preference)
+- Business Analyst
 - Data Analyst
 - Systems Analyst
 - Business Intelligence Analyst
@@ -42,7 +42,6 @@ Strongly open to (great cities I would happily relocate to):
 - Nashville, TN
 - Raleigh-Durham and Charlotte, NC
 - Tampa, Orlando, and Miami, FL
-- Columbus, OH
 - Other comparable mid-to-large US metros with a healthy analyst job market
 
 What makes a city appealing to me (use these as the "fit" test):
@@ -81,7 +80,6 @@ What Makes a Job a Strong Fit:
 What Would Make Me Pass on a Role:
 - Purely administrative with no analytical or technical work
 - No defined growth path or mentorship culture
-- Fully in-office with zero flexibility
 - Very small company with no structure or support for junior employees
 
 What I Bring That Sets Me Apart:

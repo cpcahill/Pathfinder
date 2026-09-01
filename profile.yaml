@@ -1,0 +1,398 @@
+# =============================================================================
+# Pathfinder Candidate Profile
+# -----------------------------------------------------------------------------
+# This file is the single source of truth about the candidate. The scoring
+# engine reads it directly, so editing this file changes how jobs are ranked.
+# Nothing here is hardcoded anywhere else in the app, which is what makes the
+# app portable to another user later: swap this file, get a different search.
+# =============================================================================
+
+identity:
+  name: Colin Cahill
+  headline: >-
+    Business Analytics graduate who builds practical AI tools and teaches the
+    people around him to run them. Currently evaluating LLM output as an AI
+    Fellow at Handshake AI.
+  school: University of Kansas
+  degree: BS, Business Analytics
+  graduation: 2026-05
+  home_base: Lenexa, KS
+  github: github.com/cpcahill
+  linkedin: linkedin.com/in/cahillcolin
+  portfolio: https://projectpathfinder.streamlit.app/
+  # What the candidate is actually optimizing for, in their own framing.
+  north_star: >-
+    Teams building AI that augments people rather than replacing them, where
+    accuracy is audited and decisions carry real cost.
+  differentiators:
+    - Shipped a production AI invoice-auditing tool at CyberPower, ~200 hours/year saved
+    - Promoted into CyberPower's first AI Specialist Intern role by pitching the project
+    - Evaluates LLM output professionally, so knows where models fail
+    - Publicly deployed an agentic RAG app (this one)
+    - Doubled a fraternity chapter's membership, tutored 20 members in SQL and analytics
+
+# -----------------------------------------------------------------------------
+# SENIORITY
+# The single biggest source of bad matches is senior roles leaking into an
+# entry-level search. These rules are applied as hard filters, not preferences.
+# -----------------------------------------------------------------------------
+seniority:
+  target: entry
+  # A posting demanding more than this many years is filtered out entirely.
+  max_years_required: 3
+  # Titles containing these tokens are dropped. Word-boundary matched.
+  excluded_title_tokens:
+    - senior
+    - sr
+    - staff
+    - principal
+    - lead
+    - manager
+    - director
+    - head
+    - vp
+    - "vice president"
+    - chief
+    - architect
+    - supervisor
+    - executive
+    - iii
+    - iv
+  # Titles containing these are boosted: they signal a new-grad pipeline.
+  preferred_title_tokens:
+    - junior
+    - jr
+    - associate
+    - entry
+    - "entry level"
+    - "entry-level"
+    - "new grad"
+    - graduate
+    - "university"
+    - "campus"
+    - i
+    - trainee
+    - rotational
+
+# -----------------------------------------------------------------------------
+# ROLE FAMILIES
+# weight  = how much the candidate wants this family (0.0 - 1.0)
+# queries = what actually gets sent to the jobs API for this family
+# titles  = tokens that identify a posting as belonging to this family
+# -----------------------------------------------------------------------------
+role_families:
+  business_analyst:
+    label: Business Analyst
+    weight: 0.95
+    queries: ["business analyst", "business systems analyst"]
+    titles: ["business analyst", "business systems analyst", "ba "]
+  data_analyst:
+    label: Data Analyst
+    weight: 0.95
+    queries: ["data analyst", "analytics analyst"]
+    titles: ["data analyst", "analytics analyst", "insights analyst"]
+  bi_analyst:
+    label: Business Intelligence
+    weight: 0.90
+    queries: ["business intelligence analyst", "reporting analyst"]
+    titles: ["business intelligence", "bi analyst", "bi developer", "reporting analyst"]
+  systems_analyst:
+    label: Systems Analyst
+    weight: 0.85
+    queries: ["systems analyst", "technical analyst"]
+    titles: ["systems analyst", "technical analyst", "it analyst", "application analyst"]
+  ai_ml:
+    label: AI / ML
+    weight: 1.00
+    queries: ["ai engineer", "ai analyst", "machine learning engineer"]
+    titles: ["ai engineer", "ai analyst", "ai specialist", "ai developer", "machine learning",
+             "ml engineer", "ml analyst", "automation analyst", "applied ai", "genai", "llm"]
+  ai_eval:
+    label: AI Evaluation / Trust & Safety
+    weight: 0.90
+    queries: ["ai evaluation analyst", "model evaluation", "ai quality analyst"]
+    titles: ["evaluation", "evaluator", "ai quality", "model quality", "trust and safety",
+             "ai trainer", "data annotation", "ai research assistant", "prompt engineer"]
+  ai_solutions:
+    label: AI Solutions / Forward Deployed
+    weight: 0.92
+    queries: ["ai solutions analyst", "forward deployed engineer", "solutions engineer ai"]
+    titles: ["solutions engineer", "solutions analyst", "forward deployed", "implementation analyst",
+             "technical consultant ai", "sales engineer"]
+  data_scientist:
+    label: Data Science
+    weight: 0.75
+    queries: ["data scientist entry level"]
+    titles: ["data scientist", "decision scientist"]
+  product_analyst:
+    label: Product / Ops / Strategy
+    weight: 0.75
+    queries: ["operations analyst", "product analyst", "strategy analyst"]
+    titles: ["product analyst", "operations analyst", "strategy analyst", "process analyst"]
+  financial_analyst:
+    label: Finance / Fintech
+    weight: 0.70
+    queries: ["financial analyst", "fintech analyst"]
+    titles: ["financial analyst", "finance analyst", "fintech", "credit analyst", "investment analyst", "fp&a"]
+  software_dev:
+    label: Software Development
+    weight: 0.60
+    queries: ["junior software developer", "associate software engineer"]
+    titles: ["software developer", "software engineer", "developer", "programmer"]
+  consulting:
+    label: Consulting
+    weight: 0.70
+    queries: ["business technology analyst consulting", "technology consultant"]
+    titles: ["consultant", "consulting analyst", "business technology analyst"]
+
+# -----------------------------------------------------------------------------
+# SKILLS
+# tier drives how much a match is worth:
+#   core    = proven, resume-backed, headline skill
+#   working = real working knowledge
+#   exposure= familiar, would not lead with it
+# aliases let a posting phrase its requirement differently and still match.
+# -----------------------------------------------------------------------------
+skills:
+  - name: Python
+    tier: core
+    aliases: [python, pandas, numpy, scripting]
+  - name: SQL
+    tier: core
+    aliases: [sql, mysql, postgres, postgresql, t-sql, pl/sql, sqlite, queries, "relational database"]
+  - name: LLM / agent development
+    tier: core
+    aliases: [langchain, "openai api", llm, "large language model", "generative ai", "gen ai",
+              "ai agent", agentic, "prompt engineering", genai, claude, anthropic, "foundation model"]
+  - name: RAG / vector search
+    tier: core
+    aliases: [rag, "retrieval augmented", "retrieval-augmented", faiss, "vector store",
+              "vector database", embeddings, pinecone, chroma, "semantic search"]
+  - name: Model evaluation
+    tier: core
+    aliases: ["model evaluation", "model eval", evals, "llm evaluation", "output quality",
+              "red team", "human feedback", rlhf, annotation, "ground truth", "quality assurance"]
+  - name: Data analysis
+    tier: core
+    aliases: ["data analysis", "data analytics", "data validation", "data auditing",
+              "data quality", "analyze data", insights]
+  - name: Advanced Excel
+    tier: core
+    aliases: [excel, "advanced excel", spreadsheets, "pivot table", vlookup, "power query"]
+  - name: Workflow automation
+    tier: working
+    aliases: [automation, "process automation", rpa, "workflow automation", "power automate",
+              "copilot studio", "business process automation"]
+  - name: Process mapping
+    tier: working
+    aliases: ["process mapping", "process documentation", "process improvement", "six sigma",
+              "business process", "as-is", "to-be", sop, "requirements gathering",
+              "user stories", "business requirements", brd, stakeholder]
+  - name: Data modeling
+    tier: working
+    aliases: ["er modeling", "data modeling", "entity relationship", "database design",
+              schema, "dimensional model"]
+  - name: Forecasting / predictive analytics
+    tier: working
+    aliases: [forecasting, "predictive analytics", "data mining", "statistical modeling",
+              regression, "machine learning", "time series"]
+  - name: Streamlit / app delivery
+    tier: working
+    aliases: [streamlit, "internal tool", "web app", flask, fastapi, dashboard app, deploy]
+  - name: Git / GitHub
+    tier: working
+    aliases: [git, github, "version control", "pull request", ci/cd]
+  - name: Dynamics 365
+    tier: exposure
+    aliases: ["dynamics 365", "microsoft dynamics", erp, crm, salesforce]
+  - name: BI tooling
+    tier: exposure
+    aliases: [tableau, "power bi", powerbi, looker, qlik, "data visualization", dashboards]
+  - name: Cloud
+    tier: exposure
+    aliases: [aws, azure, "google cloud", gcp, snowflake, databricks]
+
+# -----------------------------------------------------------------------------
+# LOCATION
+# Tiered rather than a hard filter, because the preference doc is explicit that
+# the right role in a good city beats a mediocre role in the top city.
+# col_index: 100 = US average cost of living. Used to normalize salary.
+# -----------------------------------------------------------------------------
+location:
+  remote_ok: true
+  remote_score: 0.95
+  relocation_open: true
+  # Score awarded when a city is not in any tier below.
+  unlisted_score: 0.45
+  tiers:
+    - score: 1.00
+      cities:
+        - {name: "Chicago", state: IL, col_index: 107}
+        - {name: "Kansas City", state: MO, col_index: 92}
+        - {name: "Overland Park", state: KS, col_index: 95}
+        - {name: "Lawrence", state: KS, col_index: 90}
+        - {name: "Olathe", state: KS, col_index: 94}
+    - score: 0.85
+      cities:
+        - {name: "Austin", state: TX, col_index: 103}
+        - {name: "Dallas", state: TX, col_index: 101}
+        - {name: "Denver", state: CO, col_index: 110}
+        - {name: "Nashville", state: TN, col_index: 101}
+        - {name: "Raleigh", state: NC, col_index: 98}
+        - {name: "Charlotte", state: NC, col_index: 99}
+        - {name: "Tampa", state: FL, col_index: 102}
+        - {name: "Phoenix", state: AZ, col_index: 103}
+        - {name: "Scottsdale", state: AZ, col_index: 112}
+        - {name: "San Diego", state: CA, col_index: 143}
+        - {name: "Seattle", state: WA, col_index: 130}
+    - score: 0.70
+      cities:
+        - {name: "Houston", state: TX, col_index: 96}
+        - {name: "Fort Worth", state: TX, col_index: 99}
+        - {name: "San Antonio", state: TX, col_index: 93}
+        - {name: "Boulder", state: CO, col_index: 125}
+        - {name: "Columbus", state: OH, col_index: 92}
+        - {name: "Orlando", state: FL, col_index: 100}
+        - {name: "Miami", state: FL, col_index: 122}
+        - {name: "Tempe", state: AZ, col_index: 102}
+        - {name: "Tucson", state: AZ, col_index: 95}
+        - {name: "Los Angeles", state: CA, col_index: 150}
+        - {name: "San Francisco", state: CA, col_index: 169}
+        - {name: "Minneapolis", state: MN, col_index: 99}
+        - {name: "Atlanta", state: GA, col_index: 100}
+        - {name: "Indianapolis", state: IN, col_index: 91}
+        - {name: "St. Louis", state: MO, col_index: 89}
+        - {name: "Omaha", state: NE, col_index: 91}
+        - {name: "Des Moines", state: IA, col_index: 91}
+        - {name: "Salt Lake City", state: UT, col_index: 106}
+        - {name: "Pittsburgh", state: PA, col_index: 94}
+        - {name: "Milwaukee", state: WI, col_index: 95}
+  # Cities that score low regardless: too expensive for an entry salary, or
+  # otherwise explicitly not wanted.
+  penalized:
+    - {name: "New York", score: 0.35, col_index: 168}
+    - {name: "Brooklyn", score: 0.35, col_index: 160}
+    - {name: "San Jose", score: 0.40, col_index: 175}
+    - {name: "Washington", score: 0.50, col_index: 140}
+    - {name: "Boston", score: 0.50, col_index: 141}
+
+# -----------------------------------------------------------------------------
+# COMPENSATION
+# Salary is compared COL-adjusted: a $70k offer in Kansas City is worth more
+# than a $85k offer in San Francisco, which is what the preference doc asks for.
+# -----------------------------------------------------------------------------
+compensation:
+  floor: 60000        # below this, heavy penalty
+  target: 75000       # full marks at or above this (COL-adjusted)
+  stretch: 100000
+  # How to treat a listing with no salary published. Adzuna often omits it, so
+  # a harsh penalty here would throw away good roles. Neutral-ish is correct.
+  unknown_score: 0.55
+
+# -----------------------------------------------------------------------------
+# INDUSTRY
+# -----------------------------------------------------------------------------
+industries:
+  preferred:
+    fintech: ["fintech", "financial services", "banking", "payments", "insurtech", "capital markets", "wealth"]
+    consulting: ["consulting", "advisory", "professional services"]
+    technology: ["saas", "software", "technology", "cloud", "platform"]
+    healthcare: ["healthcare analytics", "health system", "payer", "provider", "clinical data", "healthcare"]
+    supply_chain: ["supply chain", "logistics", "operations", "manufacturing", "distribution"]
+  neutral_score: 0.55
+
+# -----------------------------------------------------------------------------
+# SIGNALS
+# Phrases in a posting that reliably predict a good or bad early-career job.
+# Derived from the job search strategy guide.
+# -----------------------------------------------------------------------------
+signals:
+  green:
+    - {phrase: "mentorship", weight: 3}
+    - {phrase: "rotational program", weight: 4}
+    - {phrase: "rotation", weight: 2}
+    - {phrase: "training program", weight: 3}
+    - {phrase: "career development", weight: 2}
+    - {phrase: "promote from within", weight: 3}
+    - {phrase: "professional development", weight: 2}
+    - {phrase: "new grad", weight: 4}
+    - {phrase: "recent graduate", weight: 4}
+    - {phrase: "early career", weight: 4}
+    - {phrase: "onboarding", weight: 1}
+    - {phrase: "cross-functional", weight: 2}
+    - {phrase: "tuition reimbursement", weight: 2}
+    - {phrase: "401k match", weight: 1}
+    - {phrase: "hybrid", weight: 2}
+    - {phrase: "remote", weight: 2}
+  red:
+    - {phrase: "commission only", weight: 6}
+    - {phrase: "cold calling", weight: 4}
+    - {phrase: "door to door", weight: 6}
+    - {phrase: "unpaid", weight: 6}
+    - {phrase: "must have own vehicle", weight: 3}
+    - {phrase: "fast-paced startup environment where you will wear many hats", weight: 2}
+    - {phrase: "data entry", weight: 4}
+    - {phrase: "administrative support", weight: 3}
+    - {phrase: "answering phones", weight: 4}
+    - {phrase: "on-site 5 days", weight: 3}
+    - {phrase: "fully onsite", weight: 2}
+    - {phrase: "100% in office", weight: 3}
+    - {phrase: "night shift", weight: 3}
+    - {phrase: "weekend", weight: 2}
+
+# -----------------------------------------------------------------------------
+# HARD FILTERS
+# A posting matching any of these is removed from results entirely, with the
+# reason recorded so the UI can show what was screened out and why.
+# -----------------------------------------------------------------------------
+hard_filters:
+  require_us: true
+  drop_if_description_contains:
+    - "security clearance"
+    - "ts/sci"
+    - "top secret"
+    - "active clearance"
+    - "polygraph"
+    - "must be a us citizen with"
+    - "commission-only"
+    - "unpaid internship"
+  drop_if_title_contains:
+    - "intern"
+    - "internship"
+    - "co-op"
+    - "phd"
+    - "adjunct"
+    - "professor"
+  # Staffing agencies are not dropped, but they are flagged and lightly
+  # penalized: they are real jobs but usually contract, with thinner mentorship.
+  staffing_agency_markers:
+    - "robert half"
+    - "kforce"
+    - "insight global"
+    - "teksystems"
+    - "randstad"
+    - "aerotek"
+    - "adecco"
+    - "apex systems"
+    - "collabera"
+    - "motion recruitment"
+    - "cybercoders"
+    - "jobot"
+    - "staffing"
+    - "recruiting"
+    - "talent solutions"
+    - "consulting group"
+
+# -----------------------------------------------------------------------------
+# SCORING WEIGHTS
+# These must sum to 100. Changing them changes the ranking, and the UI shows
+# the per-axis contribution so the ranking is always explainable.
+# -----------------------------------------------------------------------------
+weights:
+  role_fit: 28
+  skills: 24
+  location: 15
+  compensation: 12
+  industry: 8
+  signals: 8
+  freshness: 5

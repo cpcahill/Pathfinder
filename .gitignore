@@ -25,3 +25,6 @@ faiss_index/
 Thumbs.db
 .vscode/
 .idea/
+# ---- RAG index cache ----
+faiss_index/
+rag_docs/Resume.pdf

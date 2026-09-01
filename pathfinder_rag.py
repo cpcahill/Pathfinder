@@ -1,30 +1,42 @@
 """
-Pathfinder RAG System
+Pathfinder RAG
 
-Loads Colin's three career documents from the rag_docs/ folder, splits them
-into chunks, embeds them, and stores them in a FAISS vector database. The
-agent queries this vector store on every turn to inject personalized context
-into the system prompt.
+Builds the FAISS vector store the agent uses for advice retrieval.
 
-Documents loaded:
-  - rag_docs/Resume.pdf            -> Colin's resume
-  - rag_docs/job_preferences.txt   -> What Colin is looking for in a role
-  - rag_docs/job_search_guide.txt  -> General job search strategy guidance
+A note on what belongs in retrieval
+-----------------------------------
+The first version embedded three documents: the resume, the preferences sheet,
+and the strategy guide, then pulled the four nearest chunks on every turn. That
+had a subtle failure mode. Facts the app needs on every single turn, like the
+salary floor or the list of target cities, were only present when the user's
+phrasing happened to retrieve the chunk containing them. Ask about pay and the
+model saw the salary range; ask about a job in Denver and it might not.
 
-Pattern follows the class lesson: PyPDFLoader for PDFs, TextLoader for .txt,
-RecursiveCharacterTextSplitter for chunking, OpenAIEmbeddings for embeddings,
-FAISS for the vector store.
+Retrieval is the right tool for a corpus too large to fit in a prompt and where
+different questions need different passages. That describes the strategy guide,
+which is genuinely a reference document. It does not describe a one-page
+preference sheet, which is now structured data in profile.yaml and goes into
+every prompt in full.
+
+So the split is deliberate:
+  profile.yaml  -> structured, complete, injected every turn, drives scoring
+  resume.txt    -> embedded, retrieved for experience-specific questions
+  strategy guide-> embedded, retrieved for advice questions
+
+The index is cached on disk so a restart does not re-pay for embeddings.
 """
 
-import os
-from dotenv import load_dotenv
+from __future__ import annotations
 
-from langchain_community.document_loaders import PyPDFLoader, TextLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+import hashlib
+import os
+
+from dotenv import load_dotenv
+from langchain_community.document_loaders import TextLoader, PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# Load secrets locally from .env, then overlay any Streamlit Cloud secrets.
 load_dotenv()
 try:
     import streamlit as st
@@ -33,103 +45,108 @@ try:
 except Exception:
     pass
 
-# ─────────────────────────────────────────────────────────────────
-# DOCUMENT PATHS: pulled from the rag_docs/ folder in the project
-# ─────────────────────────────────────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RAG_DOCS_FOLDER = os.path.join(BASE_DIR, "rag_docs")
+INDEX_DIR = os.path.join(BASE_DIR, "faiss_index")
 
-RAG_DOCS_FOLDER = "rag_docs"
+# (filename, source label). The first file that exists for each entry wins,
+# which lets the resume live as .txt or .pdf without a code change.
+SOURCES: list[tuple[list[str], str]] = [
+    (["resume.txt", "Resume.pdf", "resume.pdf"], "resume"),
+    (["job_search_guide.txt"], "strategy_guide"),
+]
 
-RESUME_PATH      = os.path.join(RAG_DOCS_FOLDER, "Resume.pdf")
-PREFERENCES_PATH = os.path.join(RAG_DOCS_FOLDER, "job_preferences.txt")
-STRATEGY_PATH    = os.path.join(RAG_DOCS_FOLDER, "job_search_guide.txt")
 
+def _load_one(candidates: list[str], label: str):
+    for filename in candidates:
+        path = os.path.join(RAG_DOCS_FOLDER, filename)
+        if not os.path.exists(path):
+            continue
+        loader = (PyPDFLoader(path) if path.lower().endswith(".pdf")
+                  else TextLoader(path, encoding="utf-8"))
+        docs = loader.load()
+        for doc in docs:
+            doc.metadata["source"] = label
+        print(f"[rag] loaded {filename} as '{label}' ({len(docs)} pages)")
+        return docs
+    print(f"[rag] no file found for '{label}', skipping")
+    return []
 
-# ─────────────────────────────────────────────────────────────────
-# LOAD THE DOCUMENTS
-# ─────────────────────────────────────────────────────────────────
 
 def load_documents():
-    """
-    Loads the three RAG documents from disk using LangChain document loaders.
-    PDFs are loaded with PyPDFLoader, text files with TextLoader.
-    Each document is tagged with a 'source' in metadata so we can show the
-    agent where retrieved context came from.
-    """
-    all_docs = []
-
-    # 1. Resume (PDF)
-    print(f"Loading resume from {RESUME_PATH}...")
-    resume_loader = PyPDFLoader(RESUME_PATH)
-    resume_docs = resume_loader.load()
-    for doc in resume_docs:
-        doc.metadata["source"] = "resume"
-    all_docs.extend(resume_docs)
-
-    # 2. Job preferences (text)
-    print(f"Loading preferences from {PREFERENCES_PATH}...")
-    prefs_loader = TextLoader(PREFERENCES_PATH, encoding="utf-8")
-    prefs_docs = prefs_loader.load()
-    for doc in prefs_docs:
-        doc.metadata["source"] = "preferences"
-    all_docs.extend(prefs_docs)
-
-    # 3. Job search strategy guide (text)
-    print(f"Loading strategy guide from {STRATEGY_PATH}...")
-    strategy_loader = TextLoader(STRATEGY_PATH, encoding="utf-8")
-    strategy_docs = strategy_loader.load()
-    for doc in strategy_docs:
-        doc.metadata["source"] = "strategy_guide"
-    all_docs.extend(strategy_docs)
-
-    print(f"Loaded {len(all_docs)} document pages total.")
-    return all_docs
+    docs = []
+    for candidates, label in SOURCES:
+        docs.extend(_load_one(candidates, label))
+    return docs
 
 
-# ─────────────────────────────────────────────────────────────────
-# BUILD THE VECTOR STORE (FAISS vector db)
-# ─────────────────────────────────────────────────────────────────
+def _corpus_fingerprint() -> str:
+    """Hash of the source files, so a stale cached index is never reused."""
+    h = hashlib.sha256()
+    for candidates, _ in SOURCES:
+        for filename in candidates:
+            path = os.path.join(RAG_DOCS_FOLDER, filename)
+            if os.path.exists(path):
+                h.update(filename.encode())
+                h.update(str(os.path.getmtime(path)).encode())
+                break
+    return h.hexdigest()[:16]
 
-def build_vectorstore():
-    """
-    Splits the loaded documents into chunks, embeds them with OpenAI
-    embeddings, and stores them in a FAISS vector database.
-    """
+
+def build_vectorstore() -> FAISS:
+    """Load, chunk, embed, and index. Reuses a cached index when the docs match."""
+    fingerprint = _corpus_fingerprint()
+    stamp_path = os.path.join(INDEX_DIR, "fingerprint.txt")
+
+    if os.path.isdir(INDEX_DIR) and os.path.exists(stamp_path):
+        try:
+            if open(stamp_path).read().strip() == fingerprint:
+                store = FAISS.load_local(
+                    INDEX_DIR, OpenAIEmbeddings(),
+                    allow_dangerous_deserialization=True,
+                )
+                print("[rag] reused cached index")
+                return store
+        except Exception as exc:
+            print(f"[rag] cached index unusable, rebuilding: {exc}")
+
     documents = load_documents()
+    if not documents:
+        raise FileNotFoundError(
+            f"No RAG source documents found in {RAG_DOCS_FOLDER}."
+        )
 
-    # Split into chunks for embedding
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=50,
+        chunk_size=700,        # larger than before: bullet points were being
+        chunk_overlap=120,     # split mid-sentence at 500/50
     )
     chunks = splitter.split_documents(documents)
-    print(f"Split into {len(chunks)} chunks.")
+    print(f"[rag] {len(documents)} documents -> {len(chunks)} chunks")
 
-    # Embed and store in FAISS
-    embeddings = OpenAIEmbeddings()
-    vectorstore = FAISS.from_documents(chunks, embeddings)
+    store = FAISS.from_documents(chunks, OpenAIEmbeddings())
+    try:
+        os.makedirs(INDEX_DIR, exist_ok=True)
+        store.save_local(INDEX_DIR)
+        with open(stamp_path, "w") as fh:
+            fh.write(fingerprint)
+        print("[rag] index cached to disk")
+    except Exception as exc:
+        print(f"[rag] could not cache index: {exc}")
+    return store
 
-    return vectorstore
 
-
-def get_retriever():
-    """
-    Builds the vector store and returns a retriever.
-    Called once at agent startup. Returns the top 4 most relevant chunks
-    per query.
-    """
-    vectorstore = build_vectorstore()
-    return vectorstore.as_retriever(search_kwargs={"k": 4})
+def get_retriever(k: int = 4):
+    return build_vectorstore().as_retriever(search_kwargs={"k": k})
 
 
 def retrieve_context(query: str, retriever) -> str:
-    """
-    Given a user query and a retriever, returns the most relevant chunks
-    from the vector store, formatted with their source labels for the
-    system prompt.
-    """
-    docs = retriever.invoke(query)
-    context_parts = []
-    for doc in docs:
-        source = doc.metadata.get("source", "unknown")
-        context_parts.append(f"[{source}]\n{doc.page_content}")
-    return "\n\n".join(context_parts)
+    """Nearest chunks, labelled by source, ready to drop into a prompt."""
+    try:
+        docs = retriever.invoke(query)
+    except Exception as exc:
+        print(f"[rag] retrieval failed: {exc}")
+        return ""
+    return "\n\n".join(
+        f"[{doc.metadata.get('source', 'unknown')}]\n{doc.page_content}"
+        for doc in docs
+    )
