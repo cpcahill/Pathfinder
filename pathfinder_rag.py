@@ -12,8 +12,8 @@ salary floor or the list of target cities, were only present when the user's
 phrasing happened to retrieve the chunk containing them. Ask about pay and the
 model saw the salary range; ask about a job in Denver and it might not.
 
-Retrieval is the right tool for a corpus too large to fit in a prompt and where
-different questions need different passages. That describes the strategy guide,
+Retrieval is the right tool when there is more material than fits in a prompt
+and different questions need different parts of it. That describes the strategy guide,
 which is genuinely a reference document. It does not describe a one-page
 preference sheet, which is now structured data in profile.yaml and goes into
 every prompt in full.

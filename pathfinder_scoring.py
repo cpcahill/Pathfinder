@@ -357,6 +357,9 @@ def _score_compensation(job: Job, profile: Profile,
     comp = profile.compensation
     floor = float(comp.get("floor", 55000))
     target = float(comp.get("target", 75000))
+    stretch = float(comp.get("stretch", target * 1.3))
+    floor_score = float(comp.get("floor_score", 0.40))
+    target_score = float(comp.get("target_score", 0.85))
 
     point = job.salary_point
     if not point:
@@ -364,14 +367,23 @@ def _score_compensation(job: Job, profile: Profile,
 
     adjusted = point / (col_index / 100.0)
 
-    if adjusted >= target:
-        raw = min(1.0, 0.85 + 0.15 * (adjusted - target) / max(target, 1))
-        verdict = "at or above target"
+    # The axis tops out at the stretch number, not at twice the target. The
+    # previous curve reached 1.0 only at 2x target, which for an entry-level
+    # search meant the compensation axis could never be fully earned: even a
+    # posting well above the target scored ~0.9. Anchoring the top to stretch
+    # makes the band that actually matters, target to stretch, the part that
+    # moves the score.
+    if adjusted >= stretch:
+        raw = 1.0
+        verdict = "at or above the stretch number"
+    elif adjusted >= target:
+        raw = target_score + (1.0 - target_score) * (adjusted - target) / max(stretch - target, 1)
+        verdict = "above target"
     elif adjusted >= floor:
-        raw = 0.40 + 0.45 * (adjusted - floor) / max(target - floor, 1)
+        raw = floor_score + (target_score - floor_score) * (adjusted - floor) / max(target - floor, 1)
         verdict = "inside the acceptable band"
     else:
-        raw = max(0.0, 0.40 * adjusted / max(floor, 1))
+        raw = max(0.0, floor_score * adjusted / max(floor, 1))
         verdict = "below the floor"
 
     note = f"${point:,.0f} listed"

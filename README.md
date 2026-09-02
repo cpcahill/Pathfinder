@@ -76,15 +76,15 @@ card to see the points each axis contributed and why.
 
 ## Why the profile is structured data, not a document
 
-The first version of this app stored the candidate's preferences as prose and
-retrieved four 500-character chunks from a vector store on every turn. That
+The first version of this app stored the candidate's preferences as a written
+document and retrieved four 500-character chunks from a vector store on every turn. That
 has a subtle failure mode: facts needed on *every* turn were only present when
 the user's phrasing happened to retrieve the chunk containing them. Ask about
 pay and the model saw the salary range; ask about a role in Denver and it might
 not.
 
-Retrieval is the right tool for a corpus too large to fit in a prompt, where
-different questions need different passages. A one-page preference sheet is
+Retrieval is the right tool when there is more material than fits in a prompt
+and different questions need different parts of it. A one-page preference sheet is
 neither. So the split is now deliberate:
 
 - **`profile.yaml`** is structured, complete, injected into every prompt in

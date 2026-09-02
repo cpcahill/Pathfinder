@@ -5,10 +5,10 @@ Loads profile.yaml into a structured, queryable object.
 
 Why this module exists
 ----------------------
-The first version of Pathfinder kept the candidate's facts in three prose
+The first version of Pathfinder kept the candidate's facts in three written
 documents and pulled four 500-character chunks out of a vector store on every
-turn. That is a reasonable pattern for a large corpus, but for a single resume
-and a one-page preference sheet it actively loses information: the model would
+turn. That is a reasonable pattern when there is a lot of material, but for a
+single resume and a one-page preference sheet it actively loses information: the model would
 often see the location preferences but not the salary range, or the skills but
 not the dealbreakers, depending on how the question was phrased.
 

@@ -251,7 +251,6 @@ location:
         - {name: "Fort Worth", state: TX, col_index: 99}
         - {name: "San Antonio", state: TX, col_index: 93}
         - {name: "Boulder", state: CO, col_index: 125}
-        - {name: "Columbus", state: OH, col_index: 92}
         - {name: "Orlando", state: FL, col_index: 100}
         - {name: "Miami", state: FL, col_index: 122}
         - {name: "Tempe", state: AZ, col_index: 102}
@@ -270,6 +269,11 @@ location:
   # Cities that score low regardless: too expensive for an entry salary, or
   # otherwise explicitly not wanted.
   penalized:
+    # Ohio is not somewhere Colin wants to live. Listed explicitly rather
+    # than omitted, so an Ohio posting scores below an unfamiliar city.
+    - {name: "Columbus", score: 0.20, col_index: 92}
+    - {name: "Cleveland", score: 0.20, col_index: 90}
+    - {name: "Cincinnati", score: 0.20, col_index: 91}
     - {name: "New York", score: 0.35, col_index: 168}
     - {name: "Brooklyn", score: 0.35, col_index: 160}
     - {name: "San Jose", score: 0.40, col_index: 175}
@@ -282,9 +286,20 @@ location:
 # than a $85k offer in San Francisco, which is what the preference doc asks for.
 # -----------------------------------------------------------------------------
 compensation:
-  floor: 60000        # below this, heavy penalty
-  target: 75000       # full marks at or above this (COL-adjusted)
-  stretch: 100000
+  # All three numbers are COST-OF-LIVING ADJUSTED, not the figure on the
+  # posting. In Kansas City (index 92) a $80k offer adjusts UP to about $87k;
+  # in Chicago (107) the same $80k adjusts DOWN to about $75k. So these are
+  # "what the money is actually worth", which is the point of the axis.
+  floor: 60000        # below this, the axis falls away sharply
+  target: 75000       # a number worth taking without hesitating
+  stretch: 85000      # full marks here and above
+  # What each anchor is worth on the 0-1 axis. These are here, rather than
+  # hardcoded in the scorer, because the shape of the curve is a preference
+  # too: how much better a great salary is than a fine one is a judgement,
+  # not arithmetic. A high target_score says "once pay is acceptable, other
+  # things decide it", which is the honest position for an early-career search.
+  floor_score: 0.50
+  target_score: 0.92
   # How to treat a listing with no salary published. Adzuna often omits it, so
   # a harsh penalty here would throw away good roles. Neutral-ish is correct.
   unknown_score: 0.55
@@ -334,9 +349,6 @@ signals:
     - {phrase: "data entry", weight: 4}
     - {phrase: "administrative support", weight: 3}
     - {phrase: "answering phones", weight: 4}
-    - {phrase: "on-site 5 days", weight: 3}
-    - {phrase: "fully onsite", weight: 2}
-    - {phrase: "100% in office", weight: 3}
     - {phrase: "night shift", weight: 3}
     - {phrase: "weekend", weight: 2}
 
