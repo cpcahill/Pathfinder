@@ -1,182 +1,101 @@
 # Pathfinder
 
-Pathfinder is an AI job-search assistant that **screens and scores** live job
-listings against a structured candidate profile, then explains its reasoning.
+An AI job-search assistant that finds live job postings, scores how well each
+one fits me, and keeps track of everywhere I have applied.
 
-It searches real postings, filters out the ones that are simply wrong (senior
-titles, internships, clearance requirements), scores the survivors from 0 to
-100 across seven weighted axes, ranks them, and tracks what you apply to.
+**Live app:** https://projectpathfinder.streamlit.app/
 
-Built for BSAN 400 (Detelina Stoyanova) with LangChain, OpenAI, FAISS, and
-Streamlit. Live at https://projectpathfinder.streamlit.app/
+Built for BSAN 400 at the University of Kansas.
 
----
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-app-red)
 
-## What makes this different from a chatbot with a job API bolted on
+## What it does
 
-The obvious way to build this is to hand ten raw listings to a language model
-and ask which ones look good. That produces sentences, but it is not precise
-and it is not reproducible. The same listing can be called a strong fit on one
-turn and skipped on the next, and nothing can be audited afterwards.
+- Searches live job listings through the Adzuna API
+- Screens out postings that are clearly wrong for me: senior titles,
+  internships, anything needing a security clearance
+- Scores everything else from 0 to 100 across seven weighted factors
+- Shows the breakdown behind every score, so I can see why a job ranked
+  where it did
+- Logs applications to a SQLite database and reports my interview and offer
+  rates
 
-Pathfinder splits the work along the line where each component is actually
-good:
+## How the scoring works
 
-| Job | Owner | Why |
+Every posting goes through two steps.
+
+**First, hard filters.** If a posting fails a non-negotiable requirement it is
+dropped and the reason is recorded, so I can see what got screened out instead
+of wondering where it went.
+
+**Then, weighted scoring.** Whatever survives is scored on seven factors:
+
+| Factor | Weight | What it looks at |
 |---|---|---|
-| Deciding what fits | `pathfinder_scoring.py` | Deterministic, weighted, auditable |
-| Explaining what fits | The language model | Nuance and phrasing |
-| Storing what the candidate wants | `profile.yaml` | Structured, complete, editable |
-| Retrieving background context | FAISS | Genuinely needs semantic lookup |
-
-The model never reorders the results. It interprets them.
-
----
-
-## How scoring works
-
-Every posting goes through two stages.
-
-**Stage 1: hard filters.** A posting is dropped outright, with the reason
-recorded, if it fails any non-negotiable requirement:
-
-- a senior-signalling title (`senior`, `lead`, `manager`, `principal`, `III`...)
-- more years of experience than the profile's cap
-- an internship, co-op, or academic post
-- a security clearance or polygraph requirement
-
-Screened-out listings are shown in a collapsible panel with the reason for
-each, so a filter that is too aggressive is visible rather than silent.
-
-**Stage 2: weighted scoring.** Survivors are scored on seven axes, with the
-weights defined in `profile.yaml`:
-
-| Axis | Weight | What it measures |
-|---|---|---|
-| Role fit | 28 | How closely the title matches a target role family |
-| Skills overlap | 24 | Which of the candidate's skills the posting asks for, weighted by how central each skill is |
-| Location | 15 | Tiered city preference, with remote treated as near-top |
-| Compensation | 12 | Pay against target, **normalized by local cost of living** |
-| Industry | 8 | Whether the employer is in a preferred sector |
-| Job quality signals | 8 | Green and red flag phrases drawn from the strategy guide |
+| Role fit | 28 | How close the title is to the roles I am targeting |
+| Skills overlap | 24 | Which of my skills the posting actually asks for |
+| Location | 15 | My city preferences, with remote rated near the top |
+| Compensation | 12 | Pay, adjusted for local cost of living |
+| Industry | 8 | Whether the company is in a field I want |
+| Job quality | 8 | Green and red flags in the posting text |
 | Freshness | 5 | How long the posting has been up |
 
-Point adjustments then apply for things that are not axes but still matter:
-staffing-agency listings, contract rather than permanent, part time.
+Pay is compared after adjusting for cost of living, so $70,000 in Kansas City
+scores better than $85,000 in San Francisco.
 
-Cost-of-living normalization is the axis worth calling out. A $70,000 offer in
-Kansas City scores higher than an $85,000 offer in San Francisco, because the
-preference sheet explicitly says to weigh pay against what it costs to live
-there. Every city in the profile carries a cost index.
+Everything about me lives in `profile.yaml`: my skills, target roles, cities,
+salary range, and the weights above. Editing that file changes how jobs get
+scored without touching any code.
 
-Each score is fully decomposed in the UI: expand **Score breakdown** on any
-card to see the points each axis contributed and why.
+## Tech stack
 
----
+Python · Streamlit · LangChain · OpenAI · FAISS · SQLite · Adzuna Jobs API
 
-## Why the profile is structured data, not a document
+## Running it locally
 
-The first version of this app stored the candidate's preferences as a written
-document and retrieved four 500-character chunks from a vector store on every turn. That
-has a subtle failure mode: facts needed on *every* turn were only present when
-the user's phrasing happened to retrieve the chunk containing them. Ask about
-pay and the model saw the salary range; ask about a role in Denver and it might
-not.
+```bash
+git clone https://github.com/cpcahill/Pathfinder.git
+cd Pathfinder
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-Retrieval is the right tool when there is more material than fits in a prompt
-and different questions need different parts of it. A one-page preference sheet is
-neither. So the split is now deliberate:
+Create a `.env` file in the project root with your own API keys:
 
-- **`profile.yaml`** is structured, complete, injected into every prompt in
-  full, and drives the scoring engine.
-- **FAISS** holds the resume and the job-search strategy guide, where semantic
-  retrieval genuinely helps.
+```
+OPENAI_API_KEY=your_key_here
+ADZUNA_APP_ID=your_id_here
+ADZUNA_API_KEY=your_key_here
+```
 
-This is also what makes the app portable. Nothing about any particular
-candidate is hardcoded in the Python. Swap `profile.yaml` and the entire app
-retargets: different skills, different cities, different weights, different
-filters.
+Then run it:
 
----
+```bash
+streamlit run app.py
+```
+
+It opens at `http://localhost:8501`.
 
 ## Project structure
 
 ```
-ProjectPathfinder/
-├── app.py                   # Streamlit layout and interaction
-├── pathfinder_ui.py         # Design system: stylesheet and HTML components
-├── pathfinder_agent.py      # Model, prompt assembly, conversation
-├── pathfinder_tools.py      # Six agent tools: search, score, log, update, list, stats
-├── pathfinder_scoring.py    # Hard filters and the seven-axis scoring engine
-├── pathfinder_profile.py    # Loads profile.yaml into structured objects
-├── pathfinder_rag.py        # FAISS vector store, cached to disk
-├── profile.yaml             # The candidate: skills, roles, cities, weights, filters
-├── .streamlit/config.toml   # Dark theme base
-├── rag_docs/                # Documents embedded into the vector store
-│   ├── resume.txt
-│   └── job_search_guide.txt
-└── tools_files/             # SQLite tracker, created at runtime, gitignored
+app.py                  Streamlit interface
+pathfinder_ui.py        Styling and page components
+pathfinder_agent.py     The LangChain agent and its prompt
+pathfinder_tools.py     The six tools the agent can call
+pathfinder_scoring.py   Hard filters and the seven-factor scoring engine
+pathfinder_profile.py   Loads profile.yaml
+pathfinder_rag.py       FAISS vector store for my resume and notes
+profile.yaml            My skills, roles, cities, salary range, and weights
+rag_docs/               Documents the vector store reads
 ```
 
-## The tools the agent can call
+## Notes
 
-1. `search_jobs` — fans out across role families, deduplicates, screens, scores, ranks
-2. `score_posting` — runs the same engine on a listing pasted in from elsewhere
-3. `log_application` — adds to the tracker, including the fit score it was given
-4. `update_application_status` — Applied, Interviewing, Offer, Rejected
-5. `get_applications` — the pipeline as a table
-6. `get_pipeline_stats` — conversion rates, and whether higher-scored applications actually convert better
+The application tracker is a SQLite file stored on disk. On Streamlit Cloud
+that resets whenever the app redeploys, which is fine for a demo but would
+need a hosted database to be permanent.
 
-That last point is the interesting one over time. Because the fit score is
-stored alongside the outcome, the tracker can eventually answer whether the
-scoring model is any good.
-
----
-
-## Running it locally
-
-1. Clone the repository.
-2. Create and activate a virtual environment.
-3. `pip install -r requirements.txt`
-4. Create `.env` in the project root:
-   ```
-   OPENAI_API_KEY=...
-   ADZUNA_APP_ID=...
-   ADZUNA_API_KEY=...
-   ```
-5. `streamlit run app.py`
-
-Opens at `http://localhost:8501`.
-
-## Deploying to Streamlit Cloud
-
-Push to GitHub, create an app pointed at `app.py`, and paste the same three
-keys into the **Secrets** tab as TOML:
-
-```toml
-OPENAI_API_KEY = "..."
-ADZUNA_APP_ID  = "..."
-ADZUNA_API_KEY = "..."
-```
-
-Note that the SQLite tracker lives on the container's local disk, so on
-Streamlit Cloud it resets whenever the app redeploys or sleeps. That is fine
-for a demo; a hosted Postgres would be the fix for real persistence.
-
-## Tuning the scoring
-
-Everything that determines ranking is in `profile.yaml`, and no code change is
-needed to adjust it:
-
-- `weights` — the seven axis weights, which must sum to 100
-- `seniority` — title tokens to exclude, and the years-of-experience cap
-- `role_families` — what to search for and how much each family is wanted
-- `skills` — with `core`, `working`, and `exposure` tiers that scale their value
-- `location.tiers` — city preference tiers and cost-of-living indices
-- `compensation` — floor, target, and how to treat an unpublished salary
-- `signals` — green and red flag phrases, with individual weights
-
-## Built with
-
-Streamlit · LangChain · OpenAI (gpt-4o-mini, text-embedding) · FAISS ·
-Adzuna Jobs API · SQLite
+The resume in `rag_docs/` has my contact details removed, since this
+repository is public.
